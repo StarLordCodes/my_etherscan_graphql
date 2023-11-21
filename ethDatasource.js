@@ -1,0 +1,51 @@
+const { RESTDataSource } = require("apollo-datasource-rest");
+
+// Vitalik's Ethereum Address
+const eth_address = "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"; 
+
+// Etherscan Data Source Class
+class EtherDataSource extends RESTDataSource {
+  
+  constructor() {
+    super();
+    
+    // Set base URL to Etherscan API
+    this.baseURL = "https://api.etherscan.io/api";
+  }
+
+  async etherBalanceByAddress() {
+    
+    // Call Etherscan API to get ETH balance for the address
+    return this.get(
+      `?module=account&action=balance&address=${eth_address}&tag=latest&apikey=${process.env.ETHERSCAN_API}`
+    );
+  }
+
+  async totalSupplyOfEther() {
+    
+    // Call Etherscan API to get total ETH supply
+    return this.get(  
+      `?module=stats&action=ethsupply&apikey=${process.env.ETHERSCAN_API}`
+    );
+  }
+
+  // Get latest Ethereum price
+  async getLatestEthereumPrice() {
+    
+    // Call Etherscan API to get latest ETH price
+    return this.get(
+      `?module=stats&action=ethprice&apikey=${process.env.ETHERSCAN_API}`
+    );
+  }
+
+  // Get block confirmation time
+  async getBlockConfirmationTime() {
+    
+    // Call Etherscan API to get block confirmation time estimate
+    return this.get(
+      `?module=gastracker&action=gasestimate&gasprice=2000000000&apikey=${process.env.ETHERSCAN_API}`
+    );
+  }
+}
+
+module.exports = EtherDataSource;
